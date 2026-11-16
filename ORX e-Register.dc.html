@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="ds/apostillexpress-design-system-141fbe0d-4b05-4a81-8430-4a44c41ebc9b/tokens/fonts.css">
+<link rel="stylesheet" href="ds/apostillexpress-design-system-141fbe0d-4b05-4a81-8430-4a44c41ebc9b/tokens/colors.css">
+<link rel="stylesheet" href="ds/apostillexpress-design-system-141fbe0d-4b05-4a81-8430-4a44c41ebc9b/tokens/typography.css">
+<link rel="stylesheet" href="ds/apostillexpress-design-system-141fbe0d-4b05-4a81-8430-4a44c41ebc9b/tokens/spacing.css">
+<link rel="stylesheet" href="ds/apostillexpress-design-system-141fbe0d-4b05-4a81-8430-4a44c41ebc9b/tokens/shadows.css">
+<link rel="stylesheet" href="ds/apostillexpress-design-system-141fbe0d-4b05-4a81-8430-4a44c41ebc9b/tokens/base.css">
+<link rel="stylesheet" href="ds/apostillexpress-design-system-141fbe0d-4b05-4a81-8430-4a44c41ebc9b/components.css">
+<link rel="stylesheet" href="ds/apostillexpress-design-system-141fbe0d-4b05-4a81-8430-4a44c41ebc9b/styles.css">
+<script src="ds/apostillexpress-design-system-141fbe0d-4b05-4a81-8430-4a44c41ebc9b/ds-bundle.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>body{margin:0;background:#F8F9FA;font-family:Roboto,sans-serif;color:#212529}a{color:#0D5257;text-decoration:none}a:hover{color:#09393d}</style>
+</helmet>
+<div style="height:{{ stageH }};min-height:{{ stageMin }};overflow-y:{{ stageOv }};background:{{ stageBg }};padding:{{ stagePad }};box-sizing:border-box">
+<div style="width:{{ frameW }};max-width:100%;margin:0 auto;height:{{ frameH }};min-height:{{ frameMinH }};overflow-y:{{ frameOv }};display:flex;flex-direction:column;background:#F8F9FA;font-family:Roboto,sans-serif;box-shadow:{{ frameShadow }};position:relative">
+<header style="height:56px;background:#fff;border-bottom:1px solid #E9ECEF;display:flex;align-items:center;justify-content:space-between;padding:0 {{ padX }}">
+<div style="display:flex;align-items:baseline;gap:12px"><img src="assets/orx-wordmark.svg" alt="ORX" style="height:21px;width:auto;display:block;align-self:center"></div>
+<a href="#" style="font-size:14px;font-weight:500">Help</a>
+</header><main style="flex:1;width:100%;box-sizing:border-box;max-width:560px;margin:0 auto;padding:{{ mainPad }}">
+<sc-if value="{{ isCheck }}" hint-placeholder-val="{{ true }}">
+<h1 style="margin:0 0 8px;font-size:32px;font-weight:600">Check an Official Record</h1>
+<p style="margin:0 0 24px;font-size:16px;color:#495057;line-height:1.5">Enter the URN printed on the certificate or apostille to confirm it’s genuine and current.</p>
+<div style="background:#fff;border:1px solid #E9ECEF;border-radius:12px;box-shadow:var(--ax-shadow-xs);padding:24px">
+<label style="display:block;font-size:14px;font-weight:500;margin-bottom:6px">URN</label>
+<div style="display:flex;flex-direction:{{ rowDir }};gap:12px;align-items:{{ rowAlign }}">
+<x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Input" value="{{ urn }}" invalid="{{ urnHas }}" onChange="{{ setUrn }}" placeholder="UTCM-26-000000" style="flex:1;min-width:0" hint-size="100%,44px"></x-import>
+<x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Button" onClick="{{ check }}" loading="{{ bCheck }}" disabled="{{ noUrn }}" fullWidth="{{ compact }}" size="lg" hint-size="130px,44px">Check Record</x-import>
+</div>
+<sc-if value="{{ urnHas }}" hint-placeholder-val="{{ false }}"><div style="margin-top:6px;font-size:14px;color:#E33B32"><i class="bi bi-exclamation-circle-fill"></i> {{ urnMsg }}</div></sc-if>
+<div style="display:flex;align-items:center;gap:12px;margin:20px 0;font-size:13px;color:#6C757D"><div style="flex:1;height:1px;background:#E9ECEF"></div>or<div style="flex:1;height:1px;background:#E9ECEF"></div></div>
+<x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.FileUpload" files="{{ files }}" hint="PDF only · ORX reads the URN and the document’s security features. Planned, not in the first release." onSelect="{{ selectFile }}" onRemove="{{ removeFile }}" hint-size="100%,160px"></x-import>
+<sc-if value="{{ fileDone }}" hint-placeholder-val="{{ false }}"><div style="margin-top:12px"><x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Alert" kind="info" hint-size="100%,56px">Reading the PDF isn’t available yet. Enter the URN printed on the document to check it.</x-import></div></sc-if>
+</div>
+<p style="margin:24px 0 0;font-size:14px;color:#6C757D;line-height:1.5">Recipients download their documents from the link in their email. Documents stay available for 30 days.</p>
+</sc-if>
+
+<sc-if value="{{ isEmail }}" hint-placeholder-val="{{ false }}">
+<div style="background:#fff;border:1px solid #E9ECEF;border-radius:0.5rem;box-shadow:var(--ax-shadow-sm);padding:24px">
+<h1 style="margin:0 0 8px;font-size:28px;font-weight:600">Confirm Your Email</h1>
+<p style="margin:0 0 24px;font-size:16px;color:#495057;line-height:1.5">Use the email address that is on this certificate order. We will send a one-time code to it.</p>
+<label style="display:block;font-size:14px;font-weight:500;margin-bottom:6px">Email Address</label>
+<x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Input" type="email" value="{{ email }}" invalid="{{ emailHas }}" onChange="{{ setEmail }}" placeholder="name@example.com" size="lg" hint-size="100%,44px"></x-import>
+<sc-if value="{{ emailHas }}" hint-placeholder-val="{{ false }}"><div style="margin-top:6px;font-size:14px;color:#E33B32"><i class="bi bi-exclamation-circle-fill"></i> {{ emailMsg }}</div></sc-if>
+<div style="display:flex;gap:12px;margin-top:20px">
+<x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Button" onClick="{{ sendCode }}" loading="{{ bSend }}" disabled="{{ noEmail }}" size="lg" hint-size="110px,44px">Send Code</x-import>
+<x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Button" variant="secondary" onClick="{{ backToResult }}" size="lg" hint-size="80px,44px">Back</x-import>
+</div>
+<sc-if value="{{ hasMsg }}" hint-placeholder-val="{{ false }}"><div style="margin-top:16px"><x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Alert" kind="{{ alertKind }}" hint-size="100%,56px">{{ msg }}</x-import></div></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isCode }}" hint-placeholder-val="{{ false }}">
+<div style="background:#fff;border:1px solid #E9ECEF;border-radius:0.5rem;box-shadow:var(--ax-shadow-sm);padding:24px">
+<h1 style="margin:0 0 8px;font-size:28px;font-weight:600">Enter Your Code</h1>
+<p style="margin:0 0 24px;font-size:14px;color:#495057;line-height:1.5">We sent a 6-digit code to {{ masked }}.</p>
+<label style="display:block;font-size:14px;font-weight:500;margin-bottom:6px">Verification Code</label>
+<x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Input" value="{{ code }}" invalid="{{ codeHas }}" onChange="{{ setCode }}" inputmode="numeric" maxlength="6" placeholder="0 0 0 0 0 0" size="lg" hint-size="100%,44px"></x-import>
+<sc-if value="{{ codeHas }}" hint-placeholder-val="{{ false }}"><div style="margin-top:6px;font-size:14px;color:#E33B32"><i class="bi bi-exclamation-circle-fill"></i> {{ codeMsg }}</div></sc-if>
+<div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap">
+<x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Button" onClick="{{ verify }}" loading="{{ bVerify }}" disabled="{{ noCode }}" size="lg" hint-size="170px,44px">Verify and Continue</x-import>
+<x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Button" variant="secondary" onClick="{{ resend }}" loading="{{ bResend }}" size="lg" hint-size="120px,44px">Resend Code</x-import>
+</div>
+<sc-if value="{{ hasMsg }}" hint-placeholder-val="{{ false }}"><div style="margin-top:16px"><x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Alert" kind="{{ alertKind }}" hint-size="100%,56px">{{ msg }}</x-import></div></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isReady }}" hint-placeholder-val="{{ false }}">
+<div style="background: #fff; border: 1px solid #E9ECEF; border-radius: 0.5rem; box-shadow: var(--ax-shadow-sm); padding: 24px; width: 600px">
+<h1 style="margin:0 0 8px;font-size:28px;font-weight:600;display:flex;align-items:center;gap:10px"><i class="bi bi-check-circle-fill" style="color:#1F945C"></i>Your Certificate Is Ready</h1>
+<p style="margin:0 0 24px;font-size:16px;color:#495057;line-height:1.5">The PDF is digitally signed and tamper-evident. The same signed file is provided on every authorized download.</p>
+<div style="display:flex;flex-direction:{{ readyDir }};align-items:{{ readyAlign }};justify-content:space-between;gap:16px;background:#fff;border:1px solid #E9ECEF;border-radius:12px;box-shadow:var(--ax-shadow-xs);padding:20px">
+<div style="min-width:0"><div style="font-size:15px;font-weight:600;overflow-wrap:anywhere">Marriage-Certificate-UTCM-26-000481.pdf</div><div style="font-size:13px;color:#6C757D;margin-top:2px">Available until 21 Nov 2026</div></div>
+<x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Button" onClick="{{ downloadPdf }}" loading="{{ bPdf }}" fullWidth="{{ compact }}" leading-icon="{{ lockIcon }}" size="lg" hint-size="130px,44px">Download PDF</x-import>
+</div>
+<div style="margin-top:20px"><x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Button" variant="secondary" onClick="{{ startOver }}" size="lg" hint-size="110px,44px">Start Over</x-import></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}">
+<div style="font-size:14px;font-weight:500;color:#6C757D;display:flex;align-items:center;gap:8px"><x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Spinner" size="16" hint-size="16px,16px"></x-import>Checking record…</div>
+<div style="margin-top:20px;background:#fff;border:1px solid #E9ECEF;border-radius:12px;box-shadow:var(--ax-shadow-xs);padding:24px;display:flex;flex-direction:column;gap:20px">
+<x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Skeleton" variant="rect" height="64px" hint-size="100%,64px"></x-import>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px 24px">
+<div><x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Skeleton" width="40%" hint-size="40%,16px"></x-import><x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Skeleton" width="80%" hint-size="80%,16px"></x-import></div>
+<div><x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Skeleton" width="40%" hint-size="40%,16px"></x-import><x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Skeleton" width="60%" hint-size="60%,16px"></x-import></div>
+<div><x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Skeleton" width="50%" hint-size="50%,16px"></x-import><x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Skeleton" width="70%" hint-size="70%,16px"></x-import></div>
+<div><x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Skeleton" width="40%" hint-size="40%,16px"></x-import><x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Skeleton" width="55%" hint-size="55%,16px"></x-import></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isNotFound }}" hint-placeholder-val="{{ false }}">
+<a href="#" onClick="{{ back }}" style="font-size:14px;font-weight:500"><i class="bi bi-arrow-left"></i> Check Another Record</a>
+<div style="margin-top:20px;background:#fff;border:1px solid #E9ECEF;border-radius:12px;box-shadow:var(--ax-shadow-xs);padding:24px"><span style="display:inline-block;background:#F8F9FA;border:1px solid #DEE2E6;color:#212529;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:500">Not Found</span><p style="margin:16px 0 12px;font-size:16px;line-height:1.5">We could not find a certificate with this number. Contact the Utah County Clerk’s Office for help.</p><div style="font-size:13px;color:#6C757D">Neutral result · no certificate details shown</div></div>
+<div style="margin-top:20px;background:#fff;border:1px solid #E9ECEF;border-radius:12px;box-shadow:var(--ax-shadow-xs);padding:24px"><div style="font-size:16px;font-weight:600;margin-bottom:8px">Verifying an Apostille?</div><div style="font-size:15px;color:#495057;line-height:1.5">Apostilles are issued by the Utah Lieutenant Governor’s Office. Verify and retrieve them on the <a href="#" style="text-decoration:underline">LTGO e-Register</a>.</div></div>
+</sc-if>
+<sc-if value="{{ isRescinded }}" hint-placeholder-val="{{ false }}">
+<a href="#" onClick="{{ back }}" style="font-size:14px;font-weight:500"><i class="bi bi-arrow-left"></i> Check Another Record</a>
+<div style="margin-top:20px;background:#fff;border:1px solid #E9ECEF;border-radius:12px;box-shadow:var(--ax-shadow-xs);padding:24px"><span style="display:inline-block;background:#FDECEA;border:1px solid #F5B5B0;color:#B42318;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:500">No Longer Valid</span><p style="margin:16px 0 12px;font-size:16px;line-height:1.5">This certificate has been rescinded by the Utah County Clerk and is no longer valid.</p><div style="font-size:13px;color:#6C757D">Rescinded · download disabled regardless of retention</div></div>
+<div style="margin-top:20px;background:#fff;border:1px solid #E9ECEF;border-radius:12px;box-shadow:var(--ax-shadow-xs);padding:24px"><div style="font-size:16px;font-weight:600;margin-bottom:8px">Verifying an Apostille?</div><div style="font-size:15px;color:#495057;line-height:1.5">Apostilles are issued by the Utah Lieutenant Governor’s Office. Verify and retrieve them on the <a href="#" style="text-decoration:underline">LTGO e-Register</a>.</div></div>
+</sc-if>
+
+<sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
+
+<div style="margin-top:20px;background:#fff;border:1px solid #E9ECEF;border-radius:12px;box-shadow:var(--ax-shadow-xs);padding:24px">
+<div style="display:flex;gap:12px;align-items:flex-start;background:#E8F4EE;border-radius:8px;padding:16px">
+<i class="bi bi-check-lg" style="font-size:22px;color:#1F945C;line-height:1"></i>
+<div><div style="font-size:17px;font-weight:600;color:#14532d">Valid Certificate</div><div style="font-size:14px;color:#1f5f43;margin-top:2px">Issued by the Utah County Clerk.</div></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px 24px;margin-top:24px">
+<div><div style="font-size:12px;color:#6C757D">Names</div><div style="font-size:15px;margin-top:2px">Alex Morgan and Jordan Lee</div></div>
+<div><div style="font-size:12px;color:#6C757D">Date of Marriage</div><div style="font-size:15px;margin-top:2px">19 Sep 2026</div></div>
+<div><div style="font-size:12px;color:#6C757D">County Where Marriage Occurred</div><div style="font-size:15px;margin-top:2px">Utah County</div></div>
+<div><div style="font-size:12px;color:#6C757D">Certificate Issue Date</div><div style="font-size:15px;margin-top:2px">22 Sep 2026</div></div>
+<div><div style="font-size:12px;color:#6C757D">Certificate Number (URLN)</div><div style="font-size:15px;margin-top:2px">UTCM-26-000481</div></div>
+<div><div style="font-size:12px;color:#6C757D">Status</div><div style="font-size:15px;margin-top:2px">Valid</div></div>
+</div>
+</div>
+<div style="margin-top:20px;background:#fff;border:1px solid #E9ECEF;border-radius:12px;box-shadow:var(--ax-shadow-xs);padding:24px">
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Button" onClick="{{ download }}" loading="{{ bGo }}" size="lg" leading-icon="{{ lockIcon }}" hint-size="250px,44px">Download Digital Certificate</x-import>
+<x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Button" variant="secondary" onClick="{{ back }}" size="lg" hint-size="140px,44px">Verify Another</x-import>
+</div>
+<sc-if value="{{ hasMsg }}" hint-placeholder-val="{{ false }}"><div style="margin-top:16px"><x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Alert" kind="{{ alertKind }}" hint-size="100%,56px">{{ msg }}</x-import></div></sc-if>
+<p style="margin:16px 0 0;font-size:14px;color:#6C757D;line-height:1.5">Download is limited to the requestor, designated recipients and an authorized customer.</p>
+</div>
+</sc-if>
+</main>
+<footer style="background:#fff;border-top:1px solid #E9ECEF;padding:20px {{ padX }};display:flex;flex-direction:{{ footDir }};align-items:{{ footAlign }};justify-content:space-between;flex-wrap:wrap;gap:16px 24px;font-size:14px;color:#495057">
+<nav style="display:flex;gap:24px;flex-wrap:wrap"><a href="#" style="color:#495057;font-weight:500" style-hover="color:#0D5257">Contact Us</a><a href="#" style="color:#495057;font-weight:500" style-hover="color:#0D5257">Privacy Policy</a><a href="#" style="color:#495057;font-weight:500" style-hover="color:#0D5257">Terms &amp; Conditions</a></nav>
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:12px;font-style:italic;color:#212529;align-self:flex-start">powered by</span><img src="assets/ax-gov-color.svg" alt="@Gov" style="height:32px;width:auto;display:block"><span>Copyright © 2026 @Gov. All Rights Reserved.</span></div>
+</footer>
+
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}"><aside style="position:fixed;top:72px;right:16px;width:240px;max-width:calc(100vw - 32px);z-index:2000;background:#fff;border:1px solid #E9ECEF;border-radius:12px;box-shadow:var(--ax-shadow-lg);padding:8px;box-sizing:border-box;font-family:Roboto,sans-serif"><div>
+<div style="padding:8px 12px 6px;font-size:12px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:#6C757D">Preview As</div>
+<sc-for list="{{ modes }}" as="m" hint-placeholder-count="3"><button onClick="{{ m.pick }}" style="display:flex;align-items:center;gap:12px;width:100%;border:0;background:{{ m.bg }};padding:10px 12px;border-radius:8px;font:500 15px Roboto,sans-serif;color:#212529;cursor:pointer;text-align:left"><i class="bi {{ m.icon }}" style="font-size:18px;color:#0D5257"></i><span style="flex:1">{{ m.label }}</span><span style="font-size:13px;color:#6C757D;font-weight:400">{{ m.size }}</span><i class="bi bi-check-lg" style="color:#0D5257;visibility:{{ m.vis }}"></i></button></sc-for>
+<div style="padding:12px 12px 4px;font-size:12px;color:#6C757D;line-height:1.5">Stays open while you work. Press Esc to close.</div>
+</div></aside></sc-if>
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}"><div style="position:fixed;top:72px;right:24px;z-index:1000"><x-import component-from-global-scope="ApostilleXpressDesignSystem_141fbe.Toast" kind="success" title="Download Complete" onClose="{{ closeToast }}" action="{{ toastAction }}" hint-size="360px,80px">{{ toast }}</x-import></div></sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { screen: 'check', email: '', urn: 'UTCM-26-000481', err: false, code: '', msg: '', ok: true, busy: '', files: [], errs: {}, modal: false, toast: '', mode: 'desktop', menu: false, winW: 1200 };
+  componentDidMount() {
+    this.onKey = (e) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'f') { e.preventDefault(); this.setState(st => ({ menu: !st.menu })); } else if (e.key === 'Escape') this.setState({ menu: false }); };
+    this.routes = { check: '', result: '#/valid', email: '#/valid/email', code: '#/valid/code', ready: '#/valid/download', notfound: '#/not-found', rescinded: '#/rescinded' };
+    this.applyRoute = () => {
+      const h = location.hash.replace(/\/$/, ''), k = Object.keys(this.routes).find(x => this.routes[x] === h) || 'check';
+      const urn = { notfound: 'UTCM-26-000999', rescinded: 'UTCM-26-000000' }[k] || 'UTCM-26-000481';
+      const st = { screen: k, urn, busy: '', msg: '', errs: {}, toast: '', modal: false, code: '' };
+      if (k === 'code' || k === 'ready' || k === 'email') st.email = this.state.email || 'alex@example.com';
+      this.setState(st);
+    };
+    window.addEventListener('popstate', this.applyRoute); window.addEventListener('hashchange', this.applyRoute); this.applyRoute();
+    this.onRes = () => this.setState({ winW: window.innerWidth });
+    window.addEventListener('keydown', this.onKey); window.addEventListener('resize', this.onRes); this.onRes();
+  }
+  componentDidUpdate(p, ps) {
+    if (ps.screen === this.state.screen || this.state.screen === 'loading' || !this.routes) return;
+    const h = this.routes[this.state.screen]; if (h === undefined || location.hash === h || (h === '' && !location.hash)) return;
+    try { history.pushState(null, '', location.pathname + location.search + h); } catch (e) {}
+  }
+  componentWillUnmount() { window.removeEventListener('popstate', this.applyRoute); window.removeEventListener('hashchange', this.applyRoute); window.removeEventListener('keydown', this.onKey); window.removeEventListener('resize', this.onRes); }
+  run(key, ms, fn) { this.setState({ busy: key, msg: '' }); setTimeout(() => { this.setState({ busy: '' }); fn(); }, ms); }
+  toastShow(text) { this.setState({ toast: text }); clearTimeout(this._t); this._t = setTimeout(() => this.setState({ toast: '' }), 4000); }
+  savePdf() {
+        const lines = ['Marriage Certificate', 'Certificate number (URLN): UTCM-26-000481', 'Names: Alex Morgan and Jordan Lee', 'Date of marriage: 19 Sep 2026', 'County: Utah County', 'Issued: 22 Sep 2026', 'Issued by the Utah County Clerk.'];
+        const esc = x => x.replace(/[()\\]/g, m => '\\' + m);
+        const stream = 'BT /F1 18 Tf 72 720 Td 26 TL ' + lines.map(l => '(' + esc(l) + ') Tj T*').join(' ') + ' ET';
+        const objs = ['<< /Type /Catalog /Pages 2 0 R >>', '<< /Type /Pages /Kids [3 0 R] /Count 1 >>', '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>', '<< /Length ' + stream.length + ' >>\nstream\n' + stream + '\nendstream', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>'];
+        let pdf = '%PDF-1.4\n', offs = [];
+        objs.forEach((o, i) => { offs.push(pdf.length); pdf += (i + 1) + ' 0 obj\n' + o + '\nendobj\n'; });
+        const x = pdf.length;
+        pdf += 'xref\n0 ' + (objs.length + 1) + '\n0000000000 65535 f \n' + offs.map(o => String(o).padStart(10, '0') + ' 00000 n \n').join('') + 'trailer\n<< /Size ' + (objs.length + 1) + ' /Root 1 0 R >>\nstartxref\n' + x + '\n%%EOF';
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([pdf], { type: 'application/pdf' }));
+        a.download = 'Marriage-Certificate-UTCM-26-000481.pdf';
+        document.body.appendChild(a); a.click(); a.remove();
+  }
+  renderVals() {
+    const s = this.state, set = (o) => this.setState(o), b = s.busy;
+    const W = { desktop: 0, tablet: 820, mobile: 390 }[s.mode];
+    const eff = W ? Math.min(W, s.winW - 0) : s.winW - 0, compact = eff < 600, framed = s.mode !== 'desktop';
+    const modes = [['desktop', 'Desktop', 'bi-display', 'Full width'], ['tablet', 'Tablet', 'bi-tablet', '820 px'], ['mobile', 'Mobile', 'bi-phone', '390 px']].map(([k, label, icon, size]) => ({ label, icon, size, bg: s.mode === k ? '#F1F8F8' : 'transparent', vis: s.mode === k ? 'visible' : 'hidden', pick: () => set({ mode: k }) }));
+    return {
+      files: s.files, fileDone: s.files.length > 0 && s.files[0].status === 'done',
+      selectFile: (fl) => { const f = fl && fl[0]; if (!f) return; const base = { name: f.name, size: Math.max(1, Math.round(f.size / 1024)) + ' KB' }; set({ files: [{ ...base, progress: 0, status: 'uploading' }] }); let p = 0; clearInterval(this._u); this._u = setInterval(() => { p += 20; if (p >= 100) { clearInterval(this._u); set({ files: [{ ...base, progress: 100, status: 'done' }] }); } else set({ files: [{ ...base, progress: p, status: 'uploading' }] }); }, 250); },
+      removeFile: () => { clearInterval(this._u); set({ files: [] }); },
+      isCheck: s.screen === 'check', compact, modes, menuOpen: s.menu, closeMenu: () => set({ menu: false }), stop: (e) => e.stopPropagation(),
+      stageH: framed ? '100vh' : 'auto', stageMin: framed ? '0' : '100vh', stageOv: framed ? 'hidden' : 'visible', stageRight: s.menu ? '280px' : '0', frameH: framed ? 'calc(100vh - 48px)' : 'auto', frameOv: framed ? 'auto' : 'visible',
+      stageBg: framed ? '#DDE1E6' : '#F8F9FA', stagePad: (framed ? 24 : 0) + 'px ' + 0 + 'px ' + (framed ? 24 : 0) + 'px 0', frameW: framed ? Math.min(W, s.winW - 0) + 'px' : '100%', frameMinH: framed ? '0' : '100vh', frameShadow: framed ? 'var(--ax-shadow-lg)' : 'none',
+      padX: compact ? '16px' : '32px', mainPad: compact ? '28px 16px' : '48px 20px', footDir: compact ? 'column' : 'row', footAlign: compact ? 'flex-start' : 'center',
+      rowDir: compact ? 'column' : 'row', rowAlign: compact ? 'stretch' : 'flex-start', readyDir: compact ? 'column' : 'row', readyAlign: compact ? 'stretch' : 'center', isLoading: s.screen === 'loading', isResult: s.screen === 'result', isEmail: s.screen === 'email', isCode: s.screen === 'code', isNotFound: s.screen === 'notfound', isRescinded: s.screen === 'rescinded', isReady: s.screen === 'ready',
+      bCheck: b === 'check', noUrn: s.urn.trim() === '', bGo: b === 'go', bSend: b === 'send', noEmail: s.email.trim() === '', bVerify: b === 'verify', noCode: s.code === '',
+      urnHas: !!s.errs.urn, urnMsg: s.errs.urn, emailHas: !!s.errs.email, emailMsg: s.errs.email, codeHas: !!s.errs.code, codeMsg: s.errs.code, bResend: b === 'resend', bPdf: b === 'pdf', anyBusy: !!b,
+      urn: s.urn, email: s.email, code: s.code, hasError: s.err, msg: s.msg, hasMsg: !!s.msg, alertKind: s.ok ? 'success' : 'error', modalOpen: s.modal, toast: s.toast, hasToast: !!s.toast,
+      masked: s.email.trim().replace(/^(.).*(@.*)$/, '$1••••$2'),
+      toastAction: React.createElement(window.ApostilleXpressDesignSystem_141fbe.Button, { variant: 'link', size: 'sm', onClick: () => this.setState({ toast: '' }) }, 'Dismiss'),
+      checkIcon: React.createElement('i', { className: 'bi bi-check-circle' }),
+      lockIcon: React.createElement('i', { className: 'bi bi-download' }),
+      setUrn: (e) => set({ urn: e.target.value, errs: { ...s.errs, urn: '' } }),
+      setEmail: (e) => set({ email: e.target.value, errs: { ...s.errs, email: '' } }),
+      setCode: (e) => { const raw = e.target.value, v = raw.replace(/\D/g, '').slice(0, 6); set({ code: v, errs: { ...s.errs, code: raw !== v ? 'Use numbers only — 6 digits.' : '' } }); },
+      closeToast: () => set({ toast: '' }),
+      closeModal: () => set({ modal: false }),
+      check: () => {
+        const u = s.urn.trim().toUpperCase();
+        if (!u) return set({ errs: { ...s.errs, urn: 'Enter the URN printed on the document.' } });
+        if (!/^UTCM-\d{2}-\d{6}$/.test(u)) return set({ errs: { ...s.errs, urn: 'Check the format — for example UTCM-26-000481.' } });
+        this.run('check', 700, () => {
+          set({ screen: 'loading', urn: u });
+          setTimeout(() => set({ screen: u === 'UTCM-26-000481' ? 'result' : u === 'UTCM-26-000000' ? 'rescinded' : 'notfound' }), 1100);
+        });
+      },
+      back: (e) => { e && e.preventDefault && e.preventDefault(); set({ screen: 'check', code: '', msg: '', errs: {} }); },
+      download: () => this.run('go', 700, () => set({ screen: 'email' })),
+      backToResult: () => set({ screen: 'result', msg: '' }),
+      sendCode: () => {
+        const em = s.email.trim();
+        if (!em) return set({ errs: { ...s.errs, email: 'Enter the email address on this certificate order.' } });
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)) return set({ errs: { ...s.errs, email: 'Enter a valid email address, like name@example.com.' } });
+        this.run('send', 1200, () => { set({ screen: 'code', code: '' }); });
+      },
+      verify: () => {
+        if (s.code.length !== 6) return set({ errs: { ...s.errs, code: 'Enter the 6-digit code from your email.' } });
+        this.run('verify', 1200, () => set({ screen: 'ready', errs: {} }));
+      },
+      resend: (e) => { e && e.preventDefault && e.preventDefault(); this.run('resend', 1000, () => {}); },
+      downloadPdf: () => this.run('pdf', 1400, () => { this.savePdf(); this.toastShow('Marriage-Certificate-UTCM-26-000481.pdf was saved to your device.'); }),
+      startOver: () => set({ screen: 'check', code: '', email: '', msg: '', errs: {}, modal: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>
